@@ -3,7 +3,7 @@ import './globals.css';
 export const metadata = {
   title: 'Huntboard — Land your next role',
   description:
-    'Huntboard is the job-search command center: track every application through your pipeline, stay organized, and land your next role. Free, private, no account needed.',
+    'Huntboard uses AI to automatically track your job hunt — Gmail, Google Calendar, and screenshot detection log every application for you. Free to start, built for Indonesian job seekers.',
 };
 
 export default function RootLayout({ children }) {

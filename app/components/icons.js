@@ -121,6 +121,27 @@ export function TargetIcon(props) {
   );
 }
 
+export function SparkIcon(props) {
+  return base(
+    props,
+    <>
+      <path d="M12 3.5c.8 4.8 2.7 6.7 7.5 7.5-4.8.8-6.7 2.7-7.5 7.5-.8-4.8-2.7-6.7-7.5-7.5 4.8-.8 6.7-2.7 7.5-7.5Z" />
+      <path d="M19 3.5c.3 1.8 1 2.5 2.8 2.8-1.8.3-2.5 1-2.8 2.8-.3-1.8-1-2.5-2.8-2.8 1.8-.3 2.5-1 2.8-2.8Z" />
+    </>
+  );
+}
+
+export function ImageIcon(props) {
+  return base(
+    props,
+    <>
+      <rect x="4" y="5" width="16" height="14" rx="2.5" />
+      <circle cx="9" cy="10" r="1.6" />
+      <path d="m4.8 17.2 5-5 3.4 3.4 3-3 3 3" />
+    </>
+  );
+}
+
 export function InboxIcon(props) {
   return base(
     props,

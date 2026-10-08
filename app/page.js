@@ -5,13 +5,17 @@ import {
   CheckIcon,
   TargetIcon,
   InboxIcon,
+  CalendarIcon,
   ChevronRightIcon,
   ExternalIcon,
+  SparkIcon,
+  ImageIcon,
 } from './components/icons';
+import Pricing from './components/Pricing';
 
 const GITHUB_URL = 'https://github.com/isnanfauziart/job-application-tracker';
 
-const FEATURES = [
+const LIVE_FEATURES = [
   {
     icon: <BriefcaseIcon />,
     title: 'Pipeline tracking',
@@ -30,69 +34,101 @@ const FEATURES = [
   {
     icon: <InboxIcon />,
     title: 'Private by design',
-    body: 'Everything is stored in your browser\u2019s local storage. No servers, no tracking, no data leaving your device — your job search stays yours.',
+    body: 'The free tracker stores everything in your browser\u2019s local storage. No servers, no tracking, no data leaving your device — your job search stays yours.',
   },
   {
     icon: <CheckIcon />,
     title: 'No account needed',
     body: 'Open the app and start logging. Nothing to sign up for, nothing to configure, nothing to forget the password to.',
   },
+];
+
+const PILLARS = [
   {
-    icon: <ChevronRightIcon />,
-    title: 'Free to use',
-    body: 'The tracker is free, with no tiers and no paywalls on your own data.',
+    icon: <InboxIcon />,
+    title: 'Gmail integration',
+    body: 'Huntboard reads your application emails — confirmations, interview invites, rejections — and creates or updates entries automatically. Read-only access you grant and can revoke anytime.',
+  },
+  {
+    icon: <CalendarIcon />,
+    title: 'Google Calendar sync',
+    body: 'Interviews land on your timeline the moment they\u2019re scheduled. Dates, times, and meeting links flow straight into the right application.',
+  },
+  {
+    icon: <ImageIcon />,
+    title: 'Screenshot detection',
+    body: 'Screenshot any job posting and Huntboard extracts the company, role, and source — a new entry appears on your board, no typing.',
+  },
+  {
+    icon: <TargetIcon />,
+    title: 'Auto-apply tracking',
+    body: 'Hit apply anywhere — job portals, company sites, email. Huntboard detects sent CVs and submitted applications and logs them for you.',
   },
 ];
 
 const STEPS = [
   {
     n: '01',
-    title: 'Log it',
-    body: 'Add an application in under 30 seconds — company, role, where you found it, and anything worth remembering.',
+    title: 'Connect',
+    body: 'Link Gmail and Google Calendar. Huntboard gets read-only access — granted by you, revocable anytime.',
   },
   {
     n: '02',
-    title: 'Move it',
-    body: 'Update its stage as replies come in: screening, interview, offer. Your funnel always reflects reality.',
+    title: 'Hunt as usual',
+    body: 'Apply anywhere: job portals, company sites, email. AI detects applications, interviews, and follow-ups, and logs them to your board.',
   },
   {
     n: '03',
-    title: 'Land it',
-    body: 'Walk into every interview with full context — notes, links, and history for that exact application at your fingertips.',
+    title: 'Stay on autopilot',
+    body: 'Your pipeline updates itself as replies come in, and smart reminders nudge you before warm leads go cold.',
   },
 ];
 
-const ROADMAP = [
+const PHASES = [
   {
+    phase: 'Phase 01',
+    badge: 'Up next',
+    title: 'Huntboard Pro — the automation suite',
+    body: 'Gmail integration, Google Calendar sync, screenshot detection, and auto-apply tracking launch together, with smart follow-up reminders on top.',
+  },
+  {
+    phase: 'Phase 02',
+    badge: 'On the roadmap',
     title: 'AI-tailored resumes',
-    body: 'Suggestions that tailor your resume to each job description, so every application speaks the employer\u2019s language.',
+    body: 'Your resume tuned to each job description, so every application speaks the employer\u2019s language.',
   },
   {
-    title: 'Smart follow-up reminders',
-    body: 'A nudge when an application has gone quiet for too long — never let a warm lead go cold again.',
-  },
-  {
+    phase: 'Phase 03',
+    badge: 'On the roadmap',
     title: 'Interview prep',
-    body: 'Prep notes generated from the role and company you\u2019re interviewing with, drawn from what you already logged.',
+    body: 'Prep notes generated from the role and company, drawn from what Huntboard already knows about your hunt.',
   },
 ];
 
 const FAQS = [
   {
     q: 'Is my data private?',
-    a: 'Yes. Huntboard stores everything in your browser\u2019s local storage. Your applications are never sent to a server — we couldn\u2019t see them if we wanted to.',
+    a: 'Yes. The free tracker stores everything in your browser\u2019s local storage — your applications are never sent to a server. Pro\u2019s AI features will process only the job-related emails and events you explicitly connect, and never sell or share your data.',
   },
   {
-    q: 'Is it free?',
-    a: 'Yes. The application tracker is free to use, with no account required and no paywalls on your own data.',
+    q: 'How much does Huntboard cost?',
+    a: 'Free to start: the complete manual tracker costs Rp0, no account needed. Pro is Rp49.000/month or Rp490.000/year and adds the full AI automation suite — it launches soon.',
+  },
+  {
+    q: 'When do the AI features launch?',
+    a: 'They\u2019re in active development right now. The manual tracker is live today and free; Pro — with Gmail, Calendar, screenshot detection, and auto-apply tracking — launches next. Start free now and you\u2019ll be first in line.',
+  },
+  {
+    q: 'How does the Gmail integration handle my privacy?',
+    a: 'Read-only access that you grant when connecting, and you can revoke it anytime from your Google account settings. Huntboard only processes job-related mail — applications, interview invites, follow-ups — and ignores everything else.',
   },
   {
     q: 'Do I need an account?',
-    a: 'No. Open the app and start logging applications immediately. There\u2019s nothing to sign up for.',
+    a: 'Not for the free tracker — open the app and start logging immediately. Pro\u2019s AI features will connect through your Google account, which you can disconnect anytime.',
   },
   {
-    q: 'What\u2019s coming next?',
-    a: 'We\u2019re building AI-assisted features on top of the tracker: tailored resumes, follow-up reminders, and interview prep. See the roadmap above — those items are in development, not yet available.',
+    q: 'Can I cancel Pro anytime?',
+    a: 'Yes. Cancel in one click — no emails, no retention calls. You keep Pro until the end of your billing period.',
   },
 ];
 
@@ -186,7 +222,9 @@ function Mockup() {
           ))}
         </div>
       </div>
-      <p className="lp-mock-caption">A peek at the board — illustrative preview</p>
+      <p className="lp-mock-caption">
+        Automation preview — your board, filled by AI · illustrative
+      </p>
     </div>
   );
 }
@@ -204,6 +242,7 @@ export default function LandingPage() {
           <nav className="lp-links" aria-label="Sections">
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
+            <a href="#pricing">Pricing</a>
             <a href="#roadmap">Roadmap</a>
             <a href="#faq">FAQ</a>
           </nav>
@@ -216,36 +255,45 @@ export default function LandingPage() {
       {/* ————— hero ————— */}
       <section className="lp-hero">
         <div className="lp-hero-copy">
-          <p className="eyebrow">Huntboard — your job-search command center</p>
+          <p className="eyebrow">Huntboard — AI-powered job tracking</p>
           <h1>
-            Every application, <em>accounted for.</em>
+            Your job hunt, <em>tracked automatically.</em>
           </h1>
           <p className="lp-lede">
-            Huntboard is the command center for your job search. Log every
-            application, watch it move through your pipeline, and walk into
-            every interview knowing exactly where you stand.
+            Huntboard&rsquo;s AI watches your Gmail, Google Calendar, and
+            screenshots — every application, interview, and follow-up logged
+            without manual entry. Built for Indonesian job seekers who would
+            rather land interviews than maintain spreadsheets.
           </p>
           <div className="lp-cta-row">
             <Link href="/app" className="btn-primary">
-              Open the app
+              Start tracking free
             </Link>
             <a href="#how-it-works" className="lp-cta-secondary">
               See how it works
             </a>
           </div>
-          <p className="lp-trust">Free · No account · Your data never leaves your browser</p>
+          <p className="lp-trust">
+            Free to start · No account needed · Cancel Pro anytime
+          </p>
         </div>
         <Mockup />
       </section>
 
       {/* ————— features ————— */}
       <section className="lp-section" id="features" aria-labelledby="features-h">
-        <p className="eyebrow">Features</p>
+        <p className="eyebrow">The product</p>
         <h2 id="features-h">
-          Built for the hunt, <em>not the spreadsheet.</em>
+          Live today. <em>Automating tomorrow.</em>
         </h2>
+        <p className="lp-section-sub">
+          The manual tracker is live and free right now. The AI automation
+          suite is in development and launches as Huntboard Pro.
+        </p>
+
+        <h3 className="lp-subhead">Live today</h3>
         <div className="lp-grid">
-          {FEATURES.map((f) => (
+          {LIVE_FEATURES.map((f) => (
             <article key={f.title} className="lp-card">
               <span className="lp-card-icon">{f.icon}</span>
               <h3>{f.title}</h3>
@@ -253,13 +301,34 @@ export default function LandingPage() {
             </article>
           ))}
         </div>
+        <Link href="/app" className="lp-text-link">
+          Open the app <ChevronRightIcon />
+        </Link>
+
+        <h3 className="lp-subhead">
+          <SparkIcon /> Coming soon: AI automation
+        </h3>
+        <div className="lp-grid">
+          {PILLARS.map((p) => (
+            <article key={p.title} className="lp-card lp-card-roadmap">
+              <span className="lp-badge">Coming soon</span>
+              <span className="lp-card-icon">{p.icon}</span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </article>
+          ))}
+        </div>
+        <p className="lp-fineprint">
+          Automation features are in development and not yet available. Start
+          free today — Pro launches with the full suite.
+        </p>
       </section>
 
       {/* ————— how it works ————— */}
       <section className="lp-section" id="how-it-works" aria-labelledby="hiw-h">
         <p className="eyebrow">How it works</p>
         <h2 id="hiw-h">
-          Three steps. <em>Zero chaos.</em>
+          Connect. Hunt. <em>Autopilot.</em>
         </h2>
         <div className="lp-steps">
           {STEPS.map((s) => (
@@ -270,22 +339,42 @@ export default function LandingPage() {
             </article>
           ))}
         </div>
+        <p className="lp-fineprint">
+          The automated flow above is in development — the manual tracker is
+          live today and free.
+        </p>
+      </section>
+
+      {/* ————— pricing ————— */}
+      <section className="lp-section" id="pricing" aria-labelledby="pricing-h">
+        <div className="lp-pricing-head">
+          <p className="eyebrow">Pricing</p>
+          <h2 id="pricing-h">
+            Simple pricing, <em>built for job seekers.</em>
+          </h2>
+          <p className="lp-section-sub">
+            Start free. Upgrade when you&rsquo;re ready for the hunt to run
+            itself.
+          </p>
+        </div>
+        <Pricing />
       </section>
 
       {/* ————— roadmap ————— */}
       <section className="lp-section" id="roadmap" aria-labelledby="roadmap-h">
         <p className="eyebrow">Roadmap</p>
         <h2 id="roadmap-h">
-          Where Huntboard <em>is going.</em>
+          Shipping in <em>phases.</em>
         </h2>
         <p className="lp-section-sub">
-          The tracker you see today is the foundation. Next, we bring AI to
-          the job search — so the hours around each application get easier too.
+          The free tracker is live today. Pro — and everything after it —
+          ships in phases.
         </p>
         <div className="lp-grid lp-grid-3">
-          {ROADMAP.map((r) => (
+          {PHASES.map((r) => (
             <article key={r.title} className="lp-card lp-card-roadmap">
-              <span className="lp-badge">On the roadmap</span>
+              <span className="lp-badge">{r.badge}</span>
+              <span className="lp-step-n">{r.phase}</span>
               <h3>{r.title}</h3>
               <p>{r.body}</p>
             </article>
@@ -315,11 +404,14 @@ export default function LandingPage() {
       {/* ————— final CTA ————— */}
       <section className="lp-cta-band" aria-labelledby="cta-h">
         <h2 id="cta-h">
-          Start tracking <em>your hunt.</em>
+          Your job hunt, <em>on autopilot.</em>
         </h2>
-        <p>Free, private, no account needed. Your first application takes 30 seconds to log.</p>
+        <p>
+          Start free with the manual tracker today. When Pro&rsquo;s AI
+          automation lands, your hunt runs itself.
+        </p>
         <Link href="/app" className="btn-primary">
-          Open the app
+          Start tracking free
         </Link>
       </section>
 
@@ -332,6 +424,7 @@ export default function LandingPage() {
           </span>
           <nav className="lp-footer-links" aria-label="Footer">
             <Link href="/app">Open the app</Link>
+            <a href="#pricing">Pricing</a>
             <a href="#roadmap">Roadmap</a>
             <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
               GitHub <ExternalIcon />
