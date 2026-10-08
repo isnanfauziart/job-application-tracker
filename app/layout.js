@@ -1,9 +1,9 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Huntboard — Job Application Tracker',
+  title: 'Huntboard — Land your next role',
   description:
-    'A personal board for the job hunt: log every application, move it through the pipeline, and never lose track.',
+    'Huntboard is the job-search command center: track every application through your pipeline, stay organized, and land your next role. Free, private, no account needed.',
 };
 
 export default function RootLayout({ children }) {
