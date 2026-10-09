@@ -55,7 +55,7 @@ export default function Pricing() {
               </li>
             ))}
           </ul>
-          <Link href="/app" className="btn-primary">
+          <Link href="/app" className="btn-ghost">
             Start tracking free
           </Link>
         </article>
@@ -82,13 +82,13 @@ export default function Pricing() {
               </li>
             ))}
           </ul>
-          <Link href="/app" className="btn-primary">
+          <Link href="/app" className="btn-amber">
             Start free
           </Link>
         </article>
       </div>
 
-      <p className="lp-fineprint" style={{ textAlign: 'center' }}>
+      <p className="lp-fineprint lp-pricing-note">
         Prices in Indonesian Rupiah (IDR). Pro launches with the AI automation
         suite — start free today and upgrade when it lands.
       </p>

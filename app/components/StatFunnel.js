@@ -1,74 +1,79 @@
-import { ChevronRightIcon } from './icons';
+// Pipeline telemetry strip: Applied → Screening → Interview → Offer,
+// plus Rejected as a separate terminal node. Clicking a cluster filters the list.
+// The "hot" beacon marks the furthest active stage with applications in it.
 
-// Pipeline overview: the forward funnel (Applied → Screening → Interview → Offer)
-// plus Rejected as a separate terminal node. Clicking a stage filters the list.
-const FUNNEL = ['Applied', 'Screening', 'Interview', 'Offer'];
+const STAGES = ['Applied', 'Screening', 'Interview', 'Offer', 'Rejected'];
 
-const STATUS_VARS = {
-  Applied: { '--sc': 'var(--st-applied)', '--scw': 'var(--st-applied-wash)' },
-  Screening: { '--sc': 'var(--st-screening)', '--scw': 'var(--st-screening-wash)' },
-  Interview: { '--sc': 'var(--st-interview)', '--scw': 'var(--st-interview-wash)' },
-  Offer: { '--sc': 'var(--st-offer)', '--scw': 'var(--st-offer-wash)' },
-  Rejected: { '--sc': 'var(--st-rejected)', '--scw': 'var(--st-rejected-wash)' },
+const STATUS_VAR = {
+  Applied: 'var(--st-applied)',
+  Screening: 'var(--st-screening)',
+  Interview: 'var(--st-interview)',
+  Offer: 'var(--st-offer)',
+  Rejected: 'var(--st-rejected)',
 };
 
 export default function StatFunnel({ counts, filter, onSelect }) {
   const total = counts.All ?? 0;
-  const activeTotal = FUNNEL.reduce((n, s) => n + (counts[s] ?? 0), 0);
+  const funnelTotal =
+    counts.Applied + counts.Screening + counts.Interview + counts.Offer;
+
+  // Furthest non-terminal stage holding applications gets the hot beacon.
+  let hot = null;
+  for (const s of ['Offer', 'Interview', 'Screening', 'Applied']) {
+    if ((counts[s] ?? 0) > 0) {
+      hot = s;
+      break;
+    }
+  }
 
   return (
-    <section className="pipeline" aria-label="Application pipeline overview">
-      <div className="pipeline-inner">
-        {FUNNEL.map((s, i) => {
+    <section className="telemetry pipeline" aria-label="Application pipeline overview">
+      <div className="telemetry-head">
+        <span className="micro">
+          <span className="live-dot" aria-hidden="true" />
+          Pipeline // live
+        </span>
+        <span className="tm-stamp" aria-hidden="true">
+          {String(total).padStart(3, '0')} SIGNALS
+        </span>
+      </div>
+      <div className="telemetry-inner">
+        {STAGES.map((s, i) => {
           const c = counts[s] ?? 0;
-          const pct = activeTotal > 0 ? Math.round((c / activeTotal) * 100) : 0;
+          const base = s === 'Rejected' ? total : funnelTotal;
+          const pct = base > 0 ? Math.round((c / base) * 100) : 0;
+          const selected = filter === s;
+          const isHot = hot === s;
           return (
-            <div key={s} style={{ display: 'flex', flex: 1, alignItems: 'stretch' }}>
-              <button
-                className={`stage${filter === s ? ' active' : ''}`}
-                style={STATUS_VARS[s]}
-                onClick={() => onSelect(filter === s ? 'All' : s)}
-                aria-pressed={filter === s}
-                aria-label={`Filter by ${s}, ${c} applications`}
-              >
-                <span className="stage-count">{c}</span>
-                <span className="stage-label">
-                  <span className="swatch" />
-                  {s}
-                </span>
-                <span className="stage-bar" aria-hidden="true">
-                  <i style={{ width: `${pct}%` }} />
-                </span>
-              </button>
-              {i < FUNNEL.length - 1 && (
-                <span className="stage-sep" aria-hidden="true">
-                  <ChevronRightIcon />
-                </span>
-              )}
-            </div>
+            <button
+              key={s}
+              type="button"
+              className={
+                'tm-cluster' +
+                (s === 'Rejected' ? ' tm-terminal' : '') +
+                (selected ? ' tm-selected' : '') +
+                (isHot ? ' tm-hot' : '')
+              }
+              style={{ '--i': i, '--sc': STATUS_VAR[s], '--w': `${pct}%` }}
+              onClick={() => onSelect(selected ? 'All' : s)}
+              aria-pressed={selected}
+              aria-label={`Filter by ${s}, ${c} applications`}
+            >
+              <span className="tm-count">{c}</span>
+              <span className="tm-label">
+                <span className="swatch" aria-hidden="true" />
+                {s}
+                {isHot && <span className="tm-beacon" aria-hidden="true" />}
+              </span>
+              <span className="tm-conv" aria-hidden="true">
+                {pct}% {s === 'Rejected' ? 'OF TOTAL' : 'OF ACTIVE'}
+              </span>
+              <span className="tm-bar" aria-hidden="true">
+                <i />
+              </span>
+            </button>
           );
         })}
-
-        <button
-          className={`stage stage-terminal${filter === 'Rejected' ? ' active' : ''}`}
-          style={STATUS_VARS.Rejected}
-          onClick={() => onSelect(filter === 'Rejected' ? 'All' : 'Rejected')}
-          aria-pressed={filter === 'Rejected'}
-          aria-label={`Filter by Rejected, ${counts.Rejected ?? 0} applications`}
-        >
-          <span className="stage-count">{counts.Rejected ?? 0}</span>
-          <span className="stage-label">
-            <span className="swatch" />
-            Rejected
-          </span>
-          <span className="stage-bar" aria-hidden="true">
-            <i
-              style={{
-                width: total > 0 ? `${Math.round(((counts.Rejected ?? 0) / total) * 100)}%` : '0%',
-              }}
-            />
-          </span>
-        </button>
       </div>
     </section>
   );

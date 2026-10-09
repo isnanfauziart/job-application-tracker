@@ -6,7 +6,7 @@ export default function EmptyState({ kind, onAdd, onClear }) {
       <div className="empty" role="status">
         <InboxIcon />
         <h3>
-          Your board is <em>wide open.</em>
+          Your board is <span className="hl">wide open.</span>
         </h3>
         <p>
           Log your first application and watch the pipeline fill up —
@@ -24,7 +24,7 @@ export default function EmptyState({ kind, onAdd, onClear }) {
     <div className="empty" role="status">
       <SearchIcon />
       <h3>
-        Nothing <em>matches.</em>
+        Nothing <span className="hl">matches.</span>
       </h3>
       <p>Try a different search term, or clear the status filter to see everything again.</p>
       <button type="button" className="btn-primary" onClick={onClear}>

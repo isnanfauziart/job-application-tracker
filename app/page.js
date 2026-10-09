@@ -10,6 +10,7 @@ import {
   ExternalIcon,
   SparkIcon,
   ImageIcon,
+  CrosshairIcon,
 } from './components/icons';
 import Pricing from './components/Pricing';
 
@@ -132,98 +133,65 @@ const FAQS = [
   },
 ];
 
-const STATUS_STYLE = {
-  Applied: { '--sc': 'var(--st-applied)', '--scw': 'var(--st-applied-wash)' },
-  Screening: { '--sc': 'var(--st-screening)', '--scw': 'var(--st-screening-wash)' },
-  Interview: { '--sc': 'var(--st-interview)', '--scw': 'var(--st-interview-wash)' },
-  Offer: { '--sc': 'var(--st-offer)', '--scw': 'var(--st-offer-wash)' },
-};
-
-const MOCK_STAGES = [
-  { label: 'Applied', count: 12, pct: 60, style: STATUS_STYLE.Applied },
-  { label: 'Screening', count: 4, pct: 20, style: STATUS_STYLE.Screening },
-  { label: 'Interview', count: 3, pct: 15, style: STATUS_STYLE.Interview },
-  { label: 'Offer', count: 1, pct: 5, style: STATUS_STYLE.Offer },
+/* Synthetic telemetry for the hero strip — illustrative preview, not real data. */
+const DEMO_STAGES = [
+  { label: 'Applied', count: 12, pct: 60, sc: 'var(--st-applied)' },
+  { label: 'Screening', count: 4, pct: 20, sc: 'var(--st-screening)' },
+  { label: 'Interview', count: 3, pct: 15, sc: 'var(--st-interview)' },
+  { label: 'Offer', count: 1, pct: 5, sc: 'var(--st-offer)' },
+  { label: 'Rejected', count: 2, pct: 9, sc: 'var(--st-rejected)', terminal: true },
 ];
 
-const MOCK_CARDS = [
-  {
-    initials: 'AC',
-    mg: 0,
-    company: 'Acme Corp',
-    position: 'Product Designer',
-    status: 'Interview',
-    when: '2 days ago',
-  },
-  {
-    initials: 'GI',
-    mg: 3,
-    company: 'Globex Inc',
-    position: 'Frontend Engineer',
-    status: 'Screening',
-    when: '5 days ago',
-  },
-  {
-    initials: 'IL',
-    mg: 2,
-    company: 'Initech LLC',
-    position: 'Data Analyst',
-    status: 'Applied',
-    when: '1 week ago',
-  },
+const AI_CHIPS = [
+  { icon: <InboxIcon />, label: 'Gmail' },
+  { icon: <CalendarIcon />, label: 'Calendar' },
+  { icon: <ImageIcon />, label: 'Screenshots' },
 ];
 
-function Mockup() {
+function TelemetryDemo() {
   return (
-    <div className="lp-mock" aria-label="Product preview">
-      <div className="lp-mock-chrome">
-        <span className="lp-mock-dots" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="lp-mock-url">huntboard · your board</span>
-      </div>
-      <div className="lp-mock-body">
-        <div className="lp-mock-funnel">
-          {MOCK_STAGES.map((s) => (
-            <div key={s.label} className="lp-mock-stage">
-              <span className="lp-mock-count">{s.count}</span>
-              <span className="lp-mock-label">{s.label}</span>
-              <span className="lp-mock-bar">
-                <i style={{ ...s.style, width: `${s.pct}%` }} />
-              </span>
-            </div>
-          ))}
+    <div>
+      <div className="telemetry" aria-label="Pipeline preview">
+        <div className="telemetry-head">
+          <span className="micro">
+            <span className="live-dot" aria-hidden="true" />
+            Pipeline // automation preview
+          </span>
+          <span className="tm-stamp" aria-hidden="true">
+            SYNTHETIC DATA
+          </span>
         </div>
-        <div className="lp-mock-cards">
-          {MOCK_CARDS.map((c) => (
-            <div key={c.company} className="lp-mock-card">
-              <span
-                className="monogram lp-mock-mono"
-                style={{
-                  '--mg': `var(--mg-${c.mg})`,
-                  '--mgw': `var(--mg-${c.mg}w)`,
-                }}
-              >
-                {c.initials}
-              </span>
-              <span className="lp-mock-meta">
-                <strong>{c.position}</strong>
-                <span>
-                  {c.company} · {c.when}
-                </span>
-              </span>
-              <span className="status-tag" style={STATUS_STYLE[c.status]}>
+        <div className="telemetry-inner">
+          {DEMO_STAGES.map((s, i) => (
+            <div
+              key={s.label}
+              className={
+                'tm-cluster' +
+                (s.terminal ? ' tm-terminal' : '') +
+                (s.label === 'Interview' ? ' tm-hot' : '')
+              }
+              style={{ '--i': i, '--sc': s.sc, '--w': `${s.pct}%` }}
+            >
+              <span className="tm-count">{s.count}</span>
+              <span className="tm-label">
                 <span className="swatch" aria-hidden="true" />
-                {c.status}
+                {s.label}
+                {s.label === 'Interview' && (
+                  <span className="tm-beacon" aria-hidden="true" />
+                )}
+              </span>
+              <span className="tm-conv" aria-hidden="true">
+                {s.pct}% {s.terminal ? 'OF TOTAL' : 'OF ACTIVE'}
+              </span>
+              <span className="tm-bar" aria-hidden="true">
+                <i />
               </span>
             </div>
           ))}
         </div>
       </div>
-      <p className="lp-mock-caption">
-        Automation preview — your board, filled by AI · illustrative
+      <p className="telemetry-cap">
+        Illustrative preview — your board, filled by AI
       </p>
     </div>
   );
@@ -232,13 +200,17 @@ function Mockup() {
 export default function LandingPage() {
   return (
     <div className="lp">
-      {/* ————— sticky nav ————— */}
+      {/* ————— command bar nav ————— */}
       <header className="lp-nav">
         <div className="lp-nav-inner">
           <Link href="/" className="lp-brand" aria-label="Huntboard home">
-            <BriefcaseIcon />
+            <CrosshairIcon />
             Huntboard
           </Link>
+          <span className="lp-sys" aria-hidden="true">
+            <i />
+            Sys·Online
+          </span>
           <nav className="lp-links" aria-label="Sections">
             <a href="#features">Features</a>
             <a href="#how-it-works">How it works</a>
@@ -247,7 +219,7 @@ export default function LandingPage() {
             <a href="#faq">FAQ</a>
           </nav>
           <Link href="/app" className="lp-cta">
-            Open the app
+            Launch tracker
           </Link>
         </div>
       </header>
@@ -255,9 +227,8 @@ export default function LandingPage() {
       {/* ————— hero ————— */}
       <section className="lp-hero">
         <div className="lp-hero-copy">
-          <p className="eyebrow">Huntboard — AI-powered job tracking</p>
-          <h1>
-            Your job hunt, <em>tracked automatically.</em>
+          <h1 className="display">
+            Your job hunt, <span className="hl">tracked automatically.</span>
           </h1>
           <p className="lp-lede">
             Huntboard&rsquo;s AI watches your Gmail, Google Calendar, and
@@ -266,7 +237,7 @@ export default function LandingPage() {
             rather land interviews than maintain spreadsheets.
           </p>
           <div className="lp-cta-row">
-            <Link href="/app" className="btn-primary">
+            <Link href="/app" className="btn-amber">
               Start tracking free
             </Link>
             <a href="#how-it-works" className="lp-cta-secondary">
@@ -277,45 +248,83 @@ export default function LandingPage() {
             Free to start · No account needed · Cancel Pro anytime
           </p>
         </div>
-        <Mockup />
+
+        <TelemetryDemo />
+
+        <div className="ai-chips" aria-label="AI automation pillars">
+          {AI_CHIPS.map((c, i) => (
+            <span key={c.label} className="ai-chip" style={{ '--i': i }}>
+              {c.icon}
+              <span className="listen-dot" aria-hidden="true" />
+              {c.label}
+              <span className="tag-soon">Coming soon</span>
+            </span>
+          ))}
+        </div>
       </section>
 
       {/* ————— features ————— */}
       <section className="lp-section" id="features" aria-labelledby="features-h">
-        <p className="eyebrow">The product</p>
-        <h2 id="features-h">
-          Live today. <em>Automating tomorrow.</em>
+        <h2 id="features-h" className="display">
+          Live today. <span className="hl">Automating tomorrow.</span>
         </h2>
         <p className="lp-section-sub">
           The manual tracker is live and free right now. The AI automation
           suite is in development and launches as Huntboard Pro.
         </p>
 
-        <h3 className="lp-subhead">Live today</h3>
-        <div className="lp-grid">
-          {LIVE_FEATURES.map((f) => (
-            <article key={f.title} className="lp-card">
-              <span className="lp-card-icon">{f.icon}</span>
-              <h3>{f.title}</h3>
-              <p>{f.body}</p>
-            </article>
+        <div className="spec-block">
+          <div className="spec-block-head">
+            <span className="micro live">
+              <span className="live-dot" aria-hidden="true" />
+              Systems // online
+            </span>
+            <span className="tm-stamp" aria-hidden="true">
+              05 MODULES
+            </span>
+          </div>
+          {LIVE_FEATURES.map((f, i) => (
+            <div key={f.title} className="spec-row">
+              <span className="spec-idx" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="spec-icon" aria-hidden="true">
+                {f.icon}
+              </span>
+              <div>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </div>
+            </div>
           ))}
         </div>
         <Link href="/app" className="lp-text-link">
           Open the app <ChevronRightIcon />
         </Link>
 
-        <h3 className="lp-subhead">
-          <SparkIcon /> Coming soon: AI automation
-        </h3>
-        <div className="lp-grid">
-          {PILLARS.map((p) => (
-            <article key={p.title} className="lp-card lp-card-roadmap">
-              <span className="lp-badge">Coming soon</span>
-              <span className="lp-card-icon">{p.icon}</span>
-              <h3>{p.title}</h3>
-              <p>{p.body}</p>
-            </article>
+        <div className="spec-block" style={{ marginTop: 56 }}>
+          <div className="spec-block-head">
+            <span className="micro soon">Modules // in development</span>
+            <span className="tm-stamp" aria-hidden="true">
+              04 INBOUND
+            </span>
+          </div>
+          {PILLARS.map((p, i) => (
+            <div key={p.title} className="spec-row dimmed">
+              <span className="spec-idx" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="spec-icon" aria-hidden="true">
+                {p.icon}
+              </span>
+              <div>
+                <h3>
+                  {p.title}
+                  <span className="tag-soon">Coming soon</span>
+                </h3>
+                <p>{p.body}</p>
+              </div>
+            </div>
           ))}
         </div>
         <p className="lp-fineprint">
@@ -326,16 +335,22 @@ export default function LandingPage() {
 
       {/* ————— how it works ————— */}
       <section className="lp-section" id="how-it-works" aria-labelledby="hiw-h">
-        <p className="eyebrow">How it works</p>
-        <h2 id="hiw-h">
-          Connect. Hunt. <em>Autopilot.</em>
+        <h2 id="hiw-h" className="display">
+          Connect. Hunt. <span className="hl">Autopilot.</span>
         </h2>
-        <div className="lp-steps">
-          {STEPS.map((s) => (
-            <article key={s.n} className="lp-step">
-              <span className="lp-step-n">{s.n}</span>
+        <div className="ops-steps">
+          {STEPS.map((s, i) => (
+            <article key={s.n} className="ops-step">
+              <span className="seq" aria-hidden="true">
+                SEQ {s.n}
+              </span>
               <h3>{s.title}</h3>
               <p>{s.body}</p>
+              {i < STEPS.length - 1 && (
+                <span className="seq-arrow" aria-hidden="true">
+                  <ChevronRightIcon />
+                </span>
+              )}
             </article>
           ))}
         </div>
@@ -348,9 +363,8 @@ export default function LandingPage() {
       {/* ————— pricing ————— */}
       <section className="lp-section" id="pricing" aria-labelledby="pricing-h">
         <div className="lp-pricing-head">
-          <p className="eyebrow">Pricing</p>
-          <h2 id="pricing-h">
-            Simple pricing, <em>built for job seekers.</em>
+          <h2 id="pricing-h" className="display">
+            Simple pricing, <span className="hl">built for job seekers.</span>
           </h2>
           <p className="lp-section-sub">
             Start free. Upgrade when you&rsquo;re ready for the hunt to run
@@ -362,21 +376,24 @@ export default function LandingPage() {
 
       {/* ————— roadmap ————— */}
       <section className="lp-section" id="roadmap" aria-labelledby="roadmap-h">
-        <p className="eyebrow">Roadmap</p>
-        <h2 id="roadmap-h">
-          Shipping in <em>phases.</em>
+        <h2 id="roadmap-h" className="display">
+          Shipping in <span className="hl">phases.</span>
         </h2>
         <p className="lp-section-sub">
           The free tracker is live today. Pro — and everything after it —
           ships in phases.
         </p>
-        <div className="lp-grid lp-grid-3">
+        <div>
           {PHASES.map((r) => (
-            <article key={r.title} className="lp-card lp-card-roadmap">
-              <span className="lp-badge">{r.badge}</span>
-              <span className="lp-step-n">{r.phase}</span>
-              <h3>{r.title}</h3>
-              <p>{r.body}</p>
+            <article key={r.title} className="phase-row">
+              <div className="phase-meta">
+                <span className="phase-n">{r.phase}</span>
+                <span className="tag-soon">{r.badge}</span>
+              </div>
+              <div>
+                <h3>{r.title}</h3>
+                <p>{r.body}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -387,9 +404,8 @@ export default function LandingPage() {
 
       {/* ————— faq ————— */}
       <section className="lp-section" id="faq" aria-labelledby="faq-h">
-        <p className="eyebrow">FAQ</p>
-        <h2 id="faq-h">
-          Fair <em>questions.</em>
+        <h2 id="faq-h" className="display">
+          Fair <span className="hl">questions.</span>
         </h2>
         <div className="lp-faq">
           {FAQS.map((f) => (
@@ -403,23 +419,25 @@ export default function LandingPage() {
 
       {/* ————— final CTA ————— */}
       <section className="lp-cta-band" aria-labelledby="cta-h">
-        <h2 id="cta-h">
-          Your job hunt, <em>on autopilot.</em>
-        </h2>
-        <p>
-          Start free with the manual tracker today. When Pro&rsquo;s AI
-          automation lands, your hunt runs itself.
-        </p>
-        <Link href="/app" className="btn-primary">
-          Start tracking free
-        </Link>
+        <div className="lp-cta-band-inner">
+          <h2 id="cta-h" className="display">
+            Your job hunt, <span className="hl">on autopilot.</span>
+          </h2>
+          <p>
+            Start free with the manual tracker today. When Pro&rsquo;s AI
+            automation lands, your hunt runs itself.
+          </p>
+          <Link href="/app" className="btn-amber">
+            Start tracking free
+          </Link>
+        </div>
       </section>
 
       {/* ————— footer ————— */}
       <footer className="lp-footer">
         <div className="lp-footer-inner">
           <span className="lp-brand">
-            <BriefcaseIcon />
+            <CrosshairIcon />
             Huntboard
           </span>
           <nav className="lp-footer-links" aria-label="Footer">

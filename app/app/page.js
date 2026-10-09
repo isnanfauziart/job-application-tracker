@@ -5,7 +5,16 @@ import StatFunnel from '../components/StatFunnel';
 import ApplicationForm from '../components/ApplicationForm';
 import ApplicationCard from '../components/ApplicationCard';
 import EmptyState from '../components/EmptyState';
-import { BriefcaseIcon, PlusIcon, SearchIcon, CloseIcon } from '../components/icons';
+import CommandPalette from '../components/CommandPalette';
+import {
+  CrosshairIcon,
+  PlusIcon,
+  SearchIcon,
+  CloseIcon,
+  BoltIcon,
+  TargetIcon,
+  CheckIcon,
+} from '../components/icons';
 
 const STATUSES = ['Applied', 'Screening', 'Interview', 'Offer', 'Rejected'];
 const STORAGE_KEY = 'job-application-tracker:v1';
@@ -20,12 +29,21 @@ function loadApps() {
   }
 }
 
+function isTypingTarget(el) {
+  return (
+    el &&
+    (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)
+  );
+}
+
 export default function Home() {
   const [apps, setApps] = useState(null); // null = not loaded yet
   const [filter, setFilter] = useState('All');
   const [query, setQuery] = useState('');
   const [formOpen, setFormOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const formRef = useRef(null);
+  const searchRef = useRef(null);
 
   useEffect(() => {
     setApps(loadApps());
@@ -46,6 +64,27 @@ export default function Home() {
       formRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [formOpen]);
+
+  // global shortcuts: ⌘K palette, / search, n new application
+  useEffect(() => {
+    function onKey(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+        return;
+      }
+      if (isTypingTarget(e.target) || paletteOpen) return;
+      if (e.key === '/') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key.toLowerCase() === 'n' && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        setFormOpen((v) => !v);
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [paletteOpen]);
 
   const counts = useMemo(() => {
     const c = { All: 0 };
@@ -100,12 +139,45 @@ export default function Home() {
     setQuery('');
   }
 
+  const paletteActions = useMemo(
+    () => [
+      {
+        id: 'new',
+        label: formOpen ? 'Close application form' : 'Log new application',
+        hint: 'N',
+        icon: PlusIcon,
+        run: () => setFormOpen((v) => !v),
+      },
+      {
+        id: 'search',
+        label: 'Focus search',
+        hint: '/',
+        icon: SearchIcon,
+        run: () => searchRef.current?.focus(),
+      },
+      {
+        id: 'clear',
+        label: 'Clear search & filters',
+        icon: CloseIcon,
+        run: clearFilters,
+      },
+      ...['All', ...STATUSES].map((s) => ({
+        id: `filter-${s}`,
+        label: s === 'All' ? 'Show all applications' : `Filter: ${s}`,
+        icon: s === 'All' ? TargetIcon : CheckIcon,
+        run: () => setFilter(s),
+      })),
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [formOpen]
+  );
+
   if (apps === null) {
     return (
       <div className="shell">
         <div className="loader" role="status" aria-label="Loading">
           <span className="ring" aria-hidden="true" />
-          <span>Preparing your board…</span>
+          <span>Booting board…</span>
         </div>
       </div>
     );
@@ -117,7 +189,7 @@ export default function Home() {
     <div className="shell">
       <header className="topbar">
         <div className="wordmark">
-          <BriefcaseIcon />
+          <CrosshairIcon />
           Huntboard
         </div>
         <div className="topbar-note">
@@ -128,9 +200,8 @@ export default function Home() {
 
       <section className="hero">
         <div>
-          <p className="eyebrow">Application tracker</p>
-          <h1>
-            Every application, <em>accounted for.</em>
+          <h1 className="display">
+            Every application, <span className="hl">accounted for.</span>
           </h1>
           <p>
             <strong>{total} {total === 1 ? 'application' : 'applications'}</strong> tracked
@@ -168,9 +239,11 @@ export default function Home() {
       </div>
 
       <div className="section-head">
-        <h2>Applications</h2>
-        <span className="hint">
-          {filter !== 'All' ? `Filtered by ${filter}` : 'Newest first'}
+        <h2 className="display" style={{ fontSize: '30px' }}>
+          Applications
+        </h2>
+        <span className="hint micro">
+          {filter !== 'All' ? `FILTER // ${filter}` : 'SORT // NEWEST FIRST'}
         </span>
       </div>
 
@@ -178,13 +251,14 @@ export default function Home() {
         <div className="search-box">
           <SearchIcon />
           <input
+            ref={searchRef}
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search company or position…"
             aria-label="Search applications"
           />
-          {query && (
+          {query ? (
             <button
               type="button"
               className="search-clear"
@@ -193,6 +267,10 @@ export default function Home() {
             >
               <CloseIcon />
             </button>
+          ) : (
+            <span className="kbd-hint" aria-hidden="true">
+              /
+            </span>
           )}
         </div>
         {filter !== 'All' && (
@@ -207,8 +285,18 @@ export default function Home() {
             </button>
           </span>
         )}
+        <button
+          type="button"
+          className="filter-chip"
+          style={{ cursor: 'pointer' }}
+          onClick={() => setPaletteOpen(true)}
+          aria-label="Open command palette"
+        >
+          <BoltIcon />
+          ⌘K
+        </button>
         <span className="result-count" aria-live="polite">
-          {visible.length} of {total}
+          {visible.length} / {total}
         </span>
       </div>
 
@@ -236,6 +324,12 @@ export default function Home() {
         <span>Huntboard — a personal board for the job hunt.</span>
         <span>Data lives in this browser · nothing is sent anywhere.</span>
       </footer>
+
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        actions={paletteActions}
+      />
     </div>
   );
 }

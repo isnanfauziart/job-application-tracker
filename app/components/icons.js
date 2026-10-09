@@ -151,3 +151,35 @@ export function InboxIcon(props) {
     </>
   );
 }
+
+export function CrosshairIcon(props) {
+  return base(
+    props,
+    <>
+      <circle cx="12" cy="12" r="7.5" />
+      <path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+    </>
+  );
+}
+
+export function BoltIcon(props) {
+  return base(
+    props,
+    <>
+      <path d="M13 2.5 4.5 13.5H11L10 21.5l8.5-11H12L13 2.5Z" />
+    </>
+  );
+}
+
+export function RadarIcon(props) {
+  return base(
+    props,
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="4.8" />
+      <path d="M12 12 17.5 6.5" />
+      <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none" />
+    </>
+  );
+}

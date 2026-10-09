@@ -55,7 +55,7 @@ export default function ApplicationCard({ app, index, onStatusChange, onDelete }
     >
       <div
         className="monogram"
-        style={{ '--mg': `var(--mg-${mg})`, '--mgw': `var(--mg-${mg}w)` }}
+        style={{ '--mgc': `var(--mg-${mg})`, '--mgbg': `var(--mg-${mg}bg)` }}
         aria-hidden="true"
       >
         {initials(app.company || '?')}
